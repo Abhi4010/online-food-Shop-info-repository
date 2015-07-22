@@ -1,0 +1,485 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+
+<title>Sharebeast.com - The Ultimate File Sharing Service</title>
+
+<link type="text/css" rel="stylesheet" href="http://sub.sharebeast.com/css/mainsb.css" />
+<script type="text/javascript" src="http://sub.sharebeast.com/min/index.php?b=js&f=jquery-latest.js,xupload.js,thickbox.js,jquery.colorbox.js"></script>
+<link rel="shortcut icon" href="http://sub.sharebeast.com/favicon.ico" />
+
+
+
+
+
+<meta http-equiv=Content-Type content="text-html; charset=UTF-8">
+
+<meta name="description" content="With Sharebeast you can upload files, images, videos, audio and flash for free. Simply use the upload form and start sharing!">
+
+<meta name="keywords" content="file upload, share files, free upload, Free File Hosting, Free Image Hosting, Free Music Hosting, Free Video Hosting, Direct link, Download, mp3 sharing, free mp3, stream">
+
+
+
+
+
+
+<script>
+$(document).ready(function(){
+$("#embedGo").colorbox({iframe:true, width:"800px", height:"550px"});
+$("#uploadGo").colorbox({iframe:true, width:"750px", height:"580px"});
+$("#uptry").live("click", function() { 
+	$("#bigbox").slideUp();
+	$("#upbox").slideDown();
+});
+});
+</script>
+
+
+
+
+
+
+
+<style>
+  
+#boxes .window {
+	position:absolute;
+	left:-100px;
+	top:-15px;
+	z-index:9999;
+	padding:20px;  
+}
+
+#error{
+	color: #FF0000;		
+}
+</style>
+
+
+	<script src="http://sub.sharebeast.com/js/libs/modernizr-2.0.6.min.js"></script>
+<link href='http://fonts.googleapis.com/css?family=Asap:400,700,400italic' rel='stylesheet' type='text/css'>
+
+
+
+
+</head>
+<body>
+
+
+
+<div class="anchor" id="sectiond-2" style="display: block;">
+
+
+
+<script type="text/javascript">
+
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+
+</script>
+
+
+
+
+
+<script type="text/javascript">
+
+try {
+
+var pageTracker = _gat._getTracker("UA-9986052-2");
+
+pageTracker._trackPageview();
+
+} catch(err) {}
+
+function checkAuth(){
+	var login = jQuery("#login").val();
+	$("#loader").css("display", "inline");	
+	$.post("/cgi-bin/datapage.cgi", $("#login_form").serialize(), function(data){
+		var arr = data.split('#@#@');
+		if(arr[0]=="success" && arr[2]){
+			//name, value, expires, path, domain, secure
+			setCookie1( arr[3], arr[2] , '30', '/', '.sharebeast.com', '' );
+			setCookie1( "login", login , '160', '/', '.sharebeast.com', '' );			
+			//window.location.reload();		
+			window.location.href="http://www.sharebeast.com/?op=my_files";	
+		}else{
+			$("#error").html(arr[0]);
+			$("#loader").css("display", "none");
+		}
+	 });	
+}
+
+function stopRKey(evt) {
+	  var evt = (evt) ? evt : ((event) ? event : null);
+	  var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+	  if ((evt.keyCode == 13) && (node.id=="login" || node.id=="password"))  {triggerClick("loginBtn");return false;}
+	  if ((evt.keyCode == 13) && (node.id=="uname" || node.id=="pass"))  {triggerClick("loginLink");return false;}
+	  if ((evt.keyCode == 13) && (node.id=="uname1"))  {triggerClick("forgotLink");return false;}
+	  if ((evt.keyCode == 13) && (node.id=="usr_login"))  {triggerClick("forgotBtn");return false;}
+	  if ((evt.keyCode == 13) && (node.id=="searchKey"))  {triggerClick("searchLink");return false;}
+	  if ((evt.keyCode == 13) && (node.id=="create_new_folder"))  {triggerClick("createNewFolderLink");return false;}	  
+}
+
+function triggerClick(id) {
+    var isIE = navigator.appName.indexOf("Microsoft") != -1;	 
+    if(document.getElementById(id) != null) {
+        if(isIE)
+            document.getElementById(id).click();
+        else
+            $('#'+id).click();
+    }
+}
+	
+
+function setCookie1( name, value, expires, path, domain, secure )
+{
+	// set time, it's in milliseconds
+	var today = new Date();
+	today.setTime( today.getTime() );
+	
+	/*
+	if the expires variable is set, make the correct
+	expires time, the current script below will set
+	it for x number of days, to make it for hours,
+	delete * 24, for minutes, delete * 60 * 24
+	*/
+	if ( expires )
+	{
+	expires = expires * 1000 * 60 * 60 * 24;
+	}
+	var expires_date = new Date( today.getTime() + (expires) );
+	
+	document.cookie = name + "=" +escape( value ) +
+	( ( expires ) ? ";expires=" + expires_date.toGMTString() : "" ) +
+	( ( path ) ? ";path=" + path : "" ) +
+	( ( domain ) ? ";domain=" + domain : "" ) +
+	( ( secure ) ? ";secure" : "" );
+}
+
+function getCookie(c_name)
+{
+var i,x,y,ARRcookies=document.cookie.split(";");
+for (i=0;i<ARRcookies.length;i++)
+{
+  x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+  y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+  x=x.replace(/^\s+|\s+$/g,"");
+  if (x==c_name)
+    {
+    return unescape(y);
+    }
+  }
+}
+
+	
+function forgotPass(){
+	var login = jQuery("#usr_login").val();		
+	if(login.length == 0){		
+		$("#error1").html("Please enter your Login or E-mail");
+		return;
+	}	
+
+	$("#loader1").css("display", "inline");
+	$.post("/cgi-bin/datapage.cgi", $("#forgotForm").serialize(), function(data){
+		var arr = data.split('#@#@');
+		if(arr[0]=="success"){
+			$("#error1").html(arr[1]);
+		}		
+		else if(arr[0]=="failure"){
+			$("#error1").html(arr[1]);
+		}
+		$("#loader1").css("display", "none");
+	});	
+}
+
+function toggle(id1, id2){
+	$('#'+id1).css("display", "none");
+	$("#"+id2).slideDown("slow");
+}
+
+function loginDialog(obj){		
+	$.get("/?op=ajaxLogin", function(data){		
+		$('#boxes').html(data);
+	});	
+}
+
+function closeDialog(){
+	 $('#boxes').html("");
+}
+
+$(document).ready(function() {
+	var string = getCookie('lang');
+	$("#lang1").html(string.charAt(0).toUpperCase() + string.slice(1));
+});
+
+</script>
+
+
+<body class="home">
+    <script type="text/javascript">
+	//<!--
+		if (top.location.href != self.location.href ) {
+			top.location.href = self.location.href
+		}
+	//-->
+	</script>
+<!-- Begin Header -->
+
+
+	<script type="text/javascript">
+		//<![CDATA[
+		var toggleLanguage = function() {
+			this._toggle=!this._toggle; var elm = document.getElementById('langpop').style.display=(this._toggle)?'block':'none';
+		}
+		//]]>
+	</script>
+
+<div id="container">
+<header>
+		<div class="content">
+			<a href="http://www.sharebeast.com" id="logo"><h1>Sharebeast</h1></a>
+
+
+	
+	<ul id="right">
+		<li><a href="http://www.sharebeast.com/?op=registration">Register</a></li>
+		<li><a href="javascript:" onClick="loginDialog(this);">Login</a>
+			<div id="boxes" style="position:relative;float: left;"><!-- Login Dialog --></div></li>
+	
+
+
+		<li class="twitter"><a href="http://www.twitter.com/sharebeast" target="_blank"></a></li>
+		<li class="facebook"><a  target="_blank" href="http://www.facebook.com/sharebeast"></a></li>
+
+		<li class="last">	
+			<a class="langtoggle" href="/" onclick="toggleLanguage();return false;"><strong><span id='lang1'>English</span></strong></a>
+			<div class="langpop" id="langpop" style="display:none;">
+				<ul>
+						<li><a href="http://www.sharebeast.com/?op=change_lang&lang=english"><img src="http://sub.sharebeast.com/img/flag-english.png" alt="">English</a></li>
+						<li><a href="http://www.sharebeast.com/?op=change_lang&lang=french"><img src="http://sub.sharebeast.com/img/flag-french.png" alt="">French</a></li>
+						<li><a href="http://www.sharebeast.com/?op=change_lang&lang=arabic"><img src="http://sub.sharebeast.com/img/flag-arabic.png" alt="">Arabic</a></li>
+						<li><a href="http://www.sharebeast.com/?op=change_lang&lang=german"><img src="http://sub.sharebeast.com/img/flag-german.png" alt="">German</a></li>
+						<li><a href="http://www.sharebeast.com/?op=change_lang&lang=hungary"><img src="http://sub.sharebeast.com/img/flag-hungary.png" alt="">Hungary</a></li>
+						<li><a href="http://www.sharebeast.com/?op=change_lang&lang=indonesia"><img src="http://sub.sharebeast.com/img/flag-indonesia.png" alt="">Indonesia</a></li>
+						<li><a href="http://www.sharebeast.com/?op=change_lang&lang=japan"><img src="http://sub.sharebeast.com/img/flag-japan.png" alt="">Japanise</a></li>
+						<li><a href="http://www.sharebeast.com/?op=change_lang&lang=polish"><img src="http://sub.sharebeast.com/img/flag-polish.png" alt="">Polish</a></li>
+						<li><a href="http://www.sharebeast.com/?op=change_lang&lang=russian"><img src="http://sub.sharebeast.com/img/flag-russian.png" alt="">Russian</a></li>
+						<li><a href="http://www.sharebeast.com/?op=change_lang&lang=spanish"><img src="http://sub.sharebeast.com/img/flag-spanish.png" alt="">Spanish</a></li>
+						<li><a href="http://www.sharebeast.com/?op=change_lang&lang=thai"><img src="http://sub.sharebeast.com/img/flag-thai.png" alt="">Thai</a></li>
+						<li><a href="http://www.sharebeast.com/?op=change_lang&lang=turkish"><img src="http://sub.sharebeast.com/img/flag-turkish.png" alt="">Turkish</a></li>
+				</ul>
+
+			</div>
+		</li>
+	</ul>
+
+
+
+<!-- Begin Navigation -->
+
+
+
+		
+			<ul id="menu">
+				<li class="downloads section">		
+					<li class="active"><a href="http://www.sharebeast.com" id="home"></a></li>
+						<li >
+						<a class="first"  onclick="tb_show(null,'/?op=ajaxUpload&height=580&width=750&modal=true',false);" href="javascript:;">Upload</a>						    
+						</li>
+						<li ><a href="http://www.sharebeast.com/?op=payments&pg=24">Premium</a></li>
+						<li ><a href="http://www.sharebeast.com/tools.html">Tools</a></li>
+						<li ><a href="http://www.sharebeast.com/faq.html">FAQ</a></li>
+						<li><a href="http://support.sharebeast.com" class="last">Support</a></li>
+
+					
+				</li>
+			</ul>
+
+		
+		
+
+		
+
+
+<!-- End Navigation -->
+		<!-- Begin Search -->
+	<!--
+		<div id="search-head" class="section">
+			<h2>Search Files</h2>
+			<div class="wrap-out">
+				<div class="wrap-in">
+					<Form method="GET" action="">
+					<input type="hidden" name="op" value="catalogue">
+					<input type="text" name="k" value="" size=16>
+					<button type="submit">Search</button>					
+					<select name="ftype">
+					<option value="">Any</option>
+					<option value="vid">Video</option>
+					<option value="aud">Audio</option>
+					<option value="img">Image</option>
+					</select>
+					</Form>
+				</div>
+			</div>
+		</div>
+	-->	
+		<!-- End Search -->
+
+
+<!-- End Header -->
+</div>
+</div>    
+   
+
+
+
+<script>
+document.onkeypress = stopRKey;
+</script>
+<div id="main" role="main">
+		<div class="content">
+<div id="bigbox">	
+<center>
+<h2>File Not Found</h2></center><br><br>
+<div style="width:550px;text-align:left;margin:auto;">
+<b>The file you were looking for could not be found, sorry for any inconvenience.<br><br>
+Possible causes of this error could be: </b>
+<ul>
+-The file expired<br>
+-The file was deleted by its owner<br>
+-The file was deleted by administration because it didn't comply with our Terms of Use<br>
+</ul>
+
+</div>
+
+<br><br><center>
+
+
+<div class="adz">
+
+
+<table border="0" cellpadding="0" cellspacing="0" width="930">
+  <tbody><tr>
+
+    <th align="left" width="300">
+<div class="ads_300" style="float:left;width:280px;height:250px;"><iframe src="http://www.sharebeast.com/ads/300x250.php" height="250" width="280" hspace="0" vspace="0" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe></div>
+</th>
+
+    <th align="center" width="300">
+<div class="ads_300" style="float:left;width:280px;height:250px;"><iframe src="http://www.sharebeast.com/ads/300x250.php" height="250" width="280" hspace="0" vspace="0" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe></div>
+</th>
+
+    <th align="right" width="300">
+<div class="ads_300" style="float:left;width:280px;height:250px;"><iframe src="http://www.sharebeast.com/ads/300x250.php" height="250" width="280" hspace="0" vspace="0" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe></div>
+
+</th>
+
+</tr>
+</tbody></table>
+
+
+
+</div>
+
+<script type="text/javascript" src="serve/serve.js"></script>
+
+
+
+
+
+
+
+
+<script type="text/javascript" src="http://lizads.com/tags/sharebeast.js"></script>
+
+
+
+
+
+
+
+
+
+
+</center>
+<br>
+</div>
+</div></div></div>
+
+
+
+</div>
+</div>
+</div>
+
+
+
+
+<div class="AwayFromFooter">
+
+</div>
+
+<!-- Begin Footer -->
+
+
+<div style="clear: both;"></div>
+
+
+
+
+
+<footer>
+		<div class="content">
+			<span>&copy; ShareBeast is a trademark of GreenLightMedia.</span>
+			<ul>
+				<li><a href="http://www.sharebeast.com/contact.html">Contact Us</a></li>
+				<li><a href="http://www.sharebeast.com/checkfiles.html">Check Files</a></li>
+				<li><a href="/aup.html">Acceptable Use Policy</a></li>
+				<li><a href="/tos.html">Terms of Service</a></li>
+				<li><a href="/privacy.html">Private Privacy</a></li>
+			</ul>
+		</div>
+	</footer>
+
+
+
+
+<!-- End Footer -->
+ 
+
+
+<script type="text/javascript"> 
+function toggle(id1, id2){
+	$('#'+id1).css("display", "none");
+	$("#"+id2).slideDown("slow");
+}
+ 
+$(document).ready(function() {	
+	var string = getCookie('lang');
+	$("#lang1").html(string.charAt(0).toUpperCase() + string.slice(1));
+});
+ 
+</script> 
+
+<!--[if lt IE 9]>
+<script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script>
+<![endif]-->
+<!--[if lt IE 7 ]>
+	<script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.2/CFInstall.min.js"></script>
+	<script>window.attachEvent("onload",function(){CFInstall.check({mode:"overlay"})})</script>
+<![endif]-->
+
+
+
+<script type="text/javascript">
+
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+
+</script>
+
+</body>
+</html>
